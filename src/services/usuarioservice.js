@@ -25,3 +25,13 @@ export const buscarUsuarioPorNombre = (nombre) => {
     usuario.nombre.toLowerCase().includes(nombre.toLowerCase())
   );
 };
+
+
+// Editar usuario por ID
+export const editarUsuarioPorId = (usuarioActualizado) => {
+  const usuarios = obtenerUsuarios();
+  const nuevosUsuarios = usuarios.map((usuario) =>
+    usuario.id === usuarioActualizado.id ? usuarioActualizado : usuario
+  );
+  localStorage.setItem("usuarios", JSON.stringify(nuevosUsuarios));
+};

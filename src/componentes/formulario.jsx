@@ -3,15 +3,26 @@ import {formInicio} from "../constantes/formInicio"
 import {validarFormulario} from "../utils/validaciones"
 import { guardarEnLocalStorage } from "../services/usuarioservice.js";
 import { Usuario } from "../models/Usuario.js";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { ImageSelect } from "./ImagenSelected";
 import { Label } from "./ui/Label";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Buton";
 import { Form } from "./ui/Form";
 
-export function Formulario({ listPokemones, onUsuarioCreado }) {
+export function Formulario({ listPokemones, onUsuarioCreado , usuarioEditar ,onUsuarioEditado}) {
+  
+  /*Opciones Dinamicas Para los Buttons*/
+  let textButtonFormulario = usuarioEditar ? 'Editar Usuario' : 'Crear Usuario';
+  let btnClassName = usuarioEditar ? 'btn btn-secondary' : 'btn btn-primary';
+
   const [formData, setFormData] = useState(formInicio);
+
+  useEffect(() => {
+    if (usuarioEditar) {
+      setFormData(usuarioEditar);
+    }
+  }, [usuarioEditar]);
 
   const handleChange = (e) => {
     setFormData({
@@ -25,22 +36,26 @@ export function Formulario({ listPokemones, onUsuarioCreado }) {
       alert("Por favor completa todos los campos.");
       return;
     }
-  
-    const nuevoUsuario = new Usuario(
-      Date.now(),
-      formData.nombre,
-      formData.apellido,
-      formData.nacimiento,
-      formData.telefono,
-      formData.pokemonId,
-      formData.img
-    );
-  
-    guardarEnLocalStorage(nuevoUsuario);
-    alert("Cuenta guardada ✅");
-    onUsuarioCreado?.(nuevoUsuario);
-    setFormData(initialFormData);
+
+    if (usuarioEditar) {
+      onUsuarioEditado(formData);
+    } else {
+      let nuevoUsuario = new Usuario(
+        Date.now(),
+        formData.nombre,
+        formData.apellido,
+        formData.nacimiento,
+        formData.telefono,
+        formData.pokemonId,
+        formData.img
+      );
+      guardarEnLocalStorage(nuevoUsuario);
+      onUsuarioCreado(nuevoUsuario);
+      alert("Cuenta guardada");
+      setFormData(formInicio);
+    }
   };
+
   const handleSelectPokemon = (pokemonData) => {
     setFormData({
       ...formData,
@@ -93,8 +108,8 @@ export function Formulario({ listPokemones, onUsuarioCreado }) {
       <Label>Seleccionar Pokemon</Label>
       <ImageSelect listPokemones={listPokemones} onSelect={handleSelectPokemon} />
 
-      <Button className="btn btn-primary" onClick={handleClick}>
-        Crear Cuenta
+      <Button className={btnClassName} onClick={handleClick}>
+        {textButtonFormulario}
       </Button>
     </Form>
   );

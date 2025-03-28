@@ -2,62 +2,56 @@ import { useEffect, useState } from "react";
 import { Formulario } from "./componentes/formulario.jsx";
 import { ListUsuarios } from "./componentes/ListUsuarios.jsx";
 import { Button } from "./componentes/ui/Buton.js";
-import { obtenerUsuarios,eliminarUsuarioPorId } from "./services/usuarioservice.js";
 import {Modal} from "./componentes/ui/Modal";
 import {fetchPokemons} from "./services/pokemonService"
+import { useUsuarios } from "./hooks/useUsuario"
 
 function App() {
-  const [pokemons, setPokemons] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-  useEffect(() => {
-    const cargarDatos = async () => {
-      const listaPokemons = await fetchPokemons();
-      setPokemons(listaPokemons);
+    const [pokemons, setPokemons] = useState([]);
 
-      const users = obtenerUsuarios();
-      setUsuarios(users);
-    };
+    /*Destructuracion*/
+    const {
+      usuarios,
+      mostrarFormulario,
+      usuarioEditar,
+      agregarUsuario,
+      eliminarUsuario,
+      editarUsuario,
+      actualizarUsuario,
+      toggleFormulario,
+      cerrarFormulario,
+    } = useUsuarios();
 
-    cargarDatos();
-  }, []);
-
-
-  const agregarUsuario = (nuevoUsuario) => {
-    setUsuarios((prevUsuarios) => [...prevUsuarios, nuevoUsuario]);
-  };
-
-  const eliminarUsuario = (id) => {
-    eliminarUsuarioPorId(id);
-    const nuevosUsuarios = usuarios.filter((usuario) => usuario.id !== id);
-    setUsuarios(nuevosUsuarios);
-  };
-
-  /*Abrir Cerra Modal*/ 
-  const handleMostrarFormulario = () => {
-    setMostrarFormulario(!mostrarFormulario);
-  };
-
+    useEffect(() => {
+      const cargarPokemons = async () => {
+        const data = await fetchPokemons();
+        setPokemons(data);
+      };
+      cargarPokemons();
+    }, []);
+    
 
   return (
     <main className="container my-4">
 
-      <Button className="btn btn-success mb-3" onClick={handleMostrarFormulario}>
+      <Button className="btn btn-success mb-3" onClick={toggleFormulario}>
       {mostrarFormulario ? "Cerrar Formulario" : "Crear Nuevo Usuario"}
       </Button>
 
       <Modal
-        title="Registrar Nuevo Usuario"
-        show={mostrarFormulario}
-        onClose={() => setMostrarFormulario(false)}
+          title={usuarioEditar ? "Editar Usuario" : "Registrar Nuevo Usuario"}
+          show={mostrarFormulario}
+          onClose={cerrarFormulario}
       >
         <Formulario
           listPokemones={pokemons}
           onUsuarioCreado={agregarUsuario}
+          usuarioEditar={usuarioEditar}
+          onUsuarioEditado={actualizarUsuario}
         />
       </Modal>
-      <ListUsuarios listUsuarios={usuarios} onEliminar={eliminarUsuario}/>
+      <ListUsuarios listUsuarios={usuarios} onEliminar={eliminarUsuario} onEditar={editarUsuario}/>
     </main>
   );
 }
