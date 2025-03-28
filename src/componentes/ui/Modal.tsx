@@ -18,7 +18,7 @@ export function Modal({ title, show, onClose, children }: Props) {
         onClick={onClose}
       >
         <div
-          className="modal-dialog"
+          className="modal-dialog modal-lg"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="modal-content">

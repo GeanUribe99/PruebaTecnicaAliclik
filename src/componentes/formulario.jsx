@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import {} from "../estilos/formulario.css";
 import {formInicio} from "../constantes/formInicio"
 import {validarFormulario} from "../utils/validaciones"
 import { guardarEnLocalStorage } from "../services/usuarioservice.js";
@@ -47,7 +48,10 @@ export function Formulario({ listPokemones, onUsuarioCreado , usuarioEditar ,onU
         formData.nacimiento,
         formData.telefono,
         formData.pokemonId,
-        formData.img
+        formData.img,
+        formData.nickname,
+        formData.contraseña,
+        formData.correo
       );
       guardarEnLocalStorage(nuevoUsuario);
       onUsuarioCreado(nuevoUsuario);
@@ -66,51 +70,102 @@ export function Formulario({ listPokemones, onUsuarioCreado , usuarioEditar ,onU
 
   return (
     <Form className="container" onSubmit={(e) => e.preventDefault()}>
-      <Label htmlFor="nombre">Nombre:</Label>
-      <Input
-        id="nombre"
-        name="nombre"
-        value={formData.nombre}
-        onChange={handleChange}
-        placeholder="Escribe tu nombre"
-      />
+      {/* Fila con dos columnas */}
+      <div className="row">
+        <div className="col-md-6">
+          <Label htmlFor="nombre">Nombre:</Label>
+          <Input
+            id="nombre"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            placeholder="Escribe tu nombre"
+          />
+        </div>
+        <div className="col-md-6">
+          <Label htmlFor="apellido">Apellido:</Label>
+          <Input
+            id="apellido"
+            name="apellido"
+            type="text"
+            value={formData.apellido}
+            onChange={handleChange}
+            placeholder="Escribe tu apellido"
+          />
+        </div>
+      </div>
 
-      <Label htmlFor="apellido">Apellido:</Label>
-      <Input
-        id="apellido"
-        name="apellido"
-        type="text"
-        value={formData.apellido}
-        onChange={handleChange}
-        placeholder="Escribe tu apellido"
-      />
+      <div className="row">
+        <div className="col-md-6">
+          <Label htmlFor="nickname">Nickname:</Label>
+          <Input
+            id="nickname"
+            name="nickname"
+            type="text"
+            value={formData.nickname}
+            onChange={handleChange}
+            placeholder="Escribe tu nickname"
+          />
+        </div>
+        <div className="col-md-6">
+          <Label htmlFor="correo">Correo:</Label>
+          <Input
+            id="correo"
+            name="correo"
+            type="email"
+            value={formData.correo}
+            onChange={handleChange}
+            placeholder="Escribe tu correo"
+          />
+        </div>
+      </div>
 
-      <Label htmlFor="nacimiento">Nacimiento:</Label>
-      <Input
-        id="nacimiento"
-        name="nacimiento"
-        type="date"
-        value={formData.nacimiento}
-        onChange={handleChange}
-      />
+      <div className="row">
+        <div className="col-md-6">
+          <Label htmlFor="contraseña">Contraseña:</Label>
+          <Input
+            id="contraseña"
+            name="contraseña"
+            type="password"
+            value={formData.contraseña}
+            onChange={handleChange}
+            placeholder="Escribe tu contraseña"
+          />
+        </div>
+        <div className="col-md-6">
+          <Label htmlFor="nacimiento">Nacimiento:</Label>
+          <Input
+            id="nacimiento"
+            name="nacimiento"
+            type="date"
+            value={formData.nacimiento}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
 
-      <Label htmlFor="telefono">Teléfono:</Label>
-      <Input
-        id="telefono"
-        name="telefono"
-        type="number"
-        step="1"
-        value={formData.telefono}
-        onChange={handleChange}
-        placeholder="999999999"
-      />
-
-      <Label>Seleccionar Pokemon</Label>
-      <ImageSelect listPokemones={listPokemones} onSelect={handleSelectPokemon} />
+      <div className="row">
+        <div className="col-md-6">
+          <Label htmlFor="telefono">Teléfono:</Label>
+          <Input
+            id="telefono"
+            name="telefono"
+            type="number"
+            step="1"
+            value={formData.telefono}
+            onChange={handleChange}
+            placeholder="999999999"
+          />
+        </div>
+        <div className="col-md-6">
+          <Label>Seleccionar Pokemon</Label>
+          <ImageSelect listPokemones={listPokemones} onSelect={handleSelectPokemon} />
+        </div>
+      </div>
 
       <Button className={btnClassName} onClick={handleClick}>
         {textButtonFormulario}
       </Button>
-    </Form>
+    </Form>   
   );
 }

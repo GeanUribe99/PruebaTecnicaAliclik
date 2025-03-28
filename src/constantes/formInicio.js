@@ -5,4 +5,7 @@ export const formInicio = {
     telefono: "",
     pokemonId: "",
     img: "",
+    nickname:"",
+    contraseña: "",
+    correo: ""
 };

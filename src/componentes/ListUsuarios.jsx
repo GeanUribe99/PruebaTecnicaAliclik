@@ -39,7 +39,7 @@ export function ListUsuarios({ listUsuarios, onEliminar, onEditar }) {
       {usuariosFiltrados.length === 0 ? (
         <h5>No hay usuarios registrados.</h5>
       ) : (
-        <Table headers={["#", "Imagen", "Nombre", "Apellido", "Teléfono", "Acciones"]}>
+        <Table headers={["#", "Imagen", "Nombre", "Apellido", "Teléfono","Nickname","Correo", "Acciones"]}>
           {usuariosFiltrados.map((usuario, index) => (
             <tr key={usuario.id}>
               <th scope="row">{index + 1}</th>
@@ -54,6 +54,8 @@ export function ListUsuarios({ listUsuarios, onEliminar, onEditar }) {
               <td>{usuario.nombre}</td>
               <td>{usuario.apellido}</td>
               <td>{usuario.telefono}</td>
+              <td>{usuario.nickname}</td>
+              <td>{usuario.correo}</td>
               <td>
                 <Button className="btn btn-sm btn-warning me-2" onClick={() => onEditar(usuario)}>
                   Editar
