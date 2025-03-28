@@ -1,4 +1,4 @@
-const formInicio = {
+export const formInicio = {
     nombre: "",
     apellido: "",
     nacimiento: "",
