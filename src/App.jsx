@@ -4,28 +4,23 @@ import { ListUsuarios } from "./componentes/ListUsuarios.jsx";
 import { Button } from "./componentes/ui/Buton.js";
 import { obtenerUsuarios,eliminarUsuarioPorId } from "./services/usuarioservice.js";
 import {Modal} from "./componentes/ui/Modal";
+import {fetchPokemons} from "./services/pokemonService"
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon")
-      .then((response) => response.json())
-      .then(async (data) => {
-        const detalles = await Promise.all(
-          data.results.map(async (pokemon) => {
-            const res = await fetch(pokemon.url);
-            return res.json();
-          })
-        );
-        setPokemons(detalles);
-      });
+    const cargarDatos = async () => {
+      const listaPokemons = await fetchPokemons();
+      setPokemons(listaPokemons);
 
-    const users = obtenerUsuarios();
-    setUsuarios(users);
+      const users = obtenerUsuarios();
+      setUsuarios(users);
+    };
+
+    cargarDatos();
   }, []);
 
 
@@ -33,16 +28,17 @@ function App() {
     setUsuarios((prevUsuarios) => [...prevUsuarios, nuevoUsuario]);
   };
 
-
-  const handleMostrarFormulario = () => {
-    setMostrarFormulario(!mostrarFormulario);
-  };
-
   const eliminarUsuario = (id) => {
     eliminarUsuarioPorId(id);
     const nuevosUsuarios = usuarios.filter((usuario) => usuario.id !== id);
     setUsuarios(nuevosUsuarios);
   };
+
+  /*Abrir Cerra Modal*/ 
+  const handleMostrarFormulario = () => {
+    setMostrarFormulario(!mostrarFormulario);
+  };
+
 
   return (
     <main className="container my-4">

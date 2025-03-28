@@ -1,4 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import {formInicio} from "../constantes/formInicio"
+import {validarFormulario} from "../utils/validaciones"
 import { guardarEnLocalStorage } from "../services/usuarioservice.js";
 import { Usuario } from "../models/Usuario.js";
 import { useState } from "react";
@@ -9,14 +11,7 @@ import { Button } from "./ui/Buton";
 import { Form } from "./ui/Form";
 
 export function Formulario({ listPokemones, onUsuarioCreado }) {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    nacimiento: "",
-    telefono: "",
-    pokemonId: "",
-    img: "",
-  });
+  const [formData, setFormData] = useState(formInicio);
 
   const handleChange = (e) => {
     setFormData({
@@ -26,17 +21,11 @@ export function Formulario({ listPokemones, onUsuarioCreado }) {
   };
 
   const handleClick = () => {
-    if (
-      !formData.nombre ||
-      !formData.apellido ||
-      !formData.nacimiento ||
-      !formData.telefono ||
-      !formData.pokemonId
-    ) {
+    if (!validarFormulario(formData)) {
       alert("Por favor completa todos los campos.");
       return;
     }
-
+  
     const nuevoUsuario = new Usuario(
       Date.now(),
       formData.nombre,
@@ -46,24 +35,12 @@ export function Formulario({ listPokemones, onUsuarioCreado }) {
       formData.pokemonId,
       formData.img
     );
-
+  
     guardarEnLocalStorage(nuevoUsuario);
     alert("Cuenta guardada ✅");
-
-    if (onUsuarioCreado) {
-      onUsuarioCreado(nuevoUsuario);
-    }
-
-    setFormData({
-      nombre: "",
-      apellido: "",
-      nacimiento: "",
-      telefono: "",
-      pokemonId: "",
-      img: "",
-    });
+    onUsuarioCreado?.(nuevoUsuario);
+    setFormData(initialFormData);
   };
-
   const handleSelectPokemon = (pokemonData) => {
     setFormData({
       ...formData,
